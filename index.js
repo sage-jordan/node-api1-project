@@ -13,7 +13,7 @@ server.listen(5000, () => {
 });
 
 //CREATE A USER
-server.post('/users', (req, res) => {
+server.post('/api/users', (req, res) => {
     const user = res.params.body;
     db.insert(user)
         .then(newUser => {
@@ -25,13 +25,13 @@ server.post('/users', (req, res) => {
 })
 
 //GET USERS
-server.get('/users', (req, res) => { 
+server.get('/api/users', (req, res) => { 
     const users = db.find();
     res.status(201).send(users);
 });
 
 //GET USER BY ID
-server.get('/users/:id', (req, res) => {
+server.get('/api/users/:id', (req, res) => {
     const id = req.params;
     db.findById(id)
         .then(byId => {
@@ -43,7 +43,7 @@ server.get('/users/:id', (req, res) => {
 });
 
 //UPDATE USER
-server.put('/users/:id', (req, res) => {
+server.put('/api/users/:id', (req, res) => {
     const id = req.params.id;
     const userInfo = req.body;
     db.update(id , userInfo)
@@ -57,7 +57,7 @@ server.put('/users/:id', (req, res) => {
 })
 
 //DELETE USER
-server.delete('/users/:id', (req, res) => {
+server.delete('/api/users/:id', (req, res) => {
     const {id} = req.params;
     db.remove(id)
         .then(deletedUser => {
