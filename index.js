@@ -2,7 +2,7 @@
 
 const express = require('express');
 const server = express();
-// const db = require('./data/db');
+const db = require('./data/db');
 
 server.get('/', (req, res) => {
     res.send(`The server works!`);
@@ -12,10 +12,22 @@ server.listen(5000, () => {
     console.log('=== server listening on port 5000===');
 });
 
+//CREATE A USER
+server.post('/users', (req, res) => {
+    const user = res.params.body;
+    db.insert(user)
+        .then(newUser => {
+            res.status(200).json({success: true, newUser})
+        })
+        .catch(err => {
+            res.status(500).json({success:false, message: err})
+        });
+})
+
 //GET USERS
 server.get('/users', (req, res) => { 
     const users = db.find();
-    res.status(200).send(users);
+    res.status(201).send(users);
 });
 
 //GET USER BY ID
@@ -23,7 +35,7 @@ server.get('/users/:id', (req, res) => {
     const id = req.params;
     db.findById(id)
         .then(byId => {
-            res.status(201).json({success: true, byId})
+            res.status(202).json({success: true, byId})
         })
         .catch(err => {
             res.status(501).json({success: false, message: `cannot find user with id= ${id}`})
@@ -37,7 +49,7 @@ server.put('/users/:id', (req, res) => {
     db.update(id , userInfo)
         .then(user => {
             if(user) {
-                res.status(202).json
+                res.status(203).json
             } else {
                 res.status(404).json({success: false, message: `cannot find user with id= ${id}`})
             }
@@ -50,7 +62,7 @@ server.delete('/users/:id', (req, res) => {
     db.remove(id)
         .then(deletedUser => {
             if(deletedUser) {
-                res.status(203).end();
+                res.status(204).end();
             } else {
                 res.status(404).json({message: `i could not find id= ${id}`});
             }
