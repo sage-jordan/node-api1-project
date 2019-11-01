@@ -29,6 +29,12 @@ server.use(express.json());
 
 //GET USERS
 server.get('/api/users', (req, res) => { 
+    // const users = db.find();
+    // if(users){
+    //     res.status(201).json(users)
+    // } else {
+    //     res.status(501).json({success: false, message: `cannot get users at this time`})
+    // }
     db.find()
         .then(user => {
             res.status(201).json(user)
@@ -38,17 +44,17 @@ server.get('/api/users', (req, res) => {
         });
 });
 
-// //GET USER BY ID
-// server.get('/api/users/:id', (req, res) => {
-//     const id = req.params;
-//     db.findById(id)
-//         .then(byId => {
-//             res.status(202).json({success: true, byId})
-//         })
-//         .catch(err => {
-//             res.status(501).json({success: false, message: `cannot find user with id= ${id}`})
-//         })
-// });
+//GET USER BY ID
+server.get('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    db.findById(id)
+        .then(byId => {
+            res.status(202).json({success: true, message: byId})
+        })
+        .catch(err => {
+            res.status(501).json({success: false, message: `cannot find user with id= ${id}`})
+        })
+});
 
 // //UPDATE USER
 // server.put('/api/users/:id', (req, res) => {
