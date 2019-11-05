@@ -12,15 +12,22 @@ server.use(express.json());
 
 //CREATE A USER
 server.post('/api/users', (req, res) => {
-    const user = res.body;
-    console.log(user);
-    db.insert(user)
-        .then(newUser => {
-            res.status(200).json({success: true, newUser})
-        })
-        .catch(err => {
-            res.status(500).json({success:false, message: err})
-        });
+    const user = req.body;
+    if(user.hasOwnProperty("name" && "bio")){
+        db.insert(user)
+            .then(newId => {
+                const newUser = {
+                    ...newId,
+                    ...user
+                }
+                res.status(200).json({success: true, newUser});
+            })
+            .catch(err => {
+                res.status(500).json({success:false, message: err});
+            });
+    } else {
+        res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
+    }
 })
 
 //GET USERS (complete w 'localhost:8000/api/users')
