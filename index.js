@@ -71,21 +71,21 @@ server.get('/api/users/:name', (req, res) => {
 //         })
 // })
 
-// //DELETE USER
-// server.delete('/api/users/:id', (req, res) => {
-//     const {id} = req.params;
-//     db.remove(id)
-//         .then(deletedUser => {
-//             if(deletedUser) {
-//                 res.status(204).end();
-//             } else {
-//                 res.status(404).json({message: `i could not find id= ${id}`});
-//             }
-//         })
-//         .catch(err => {
-//             res.status(500).json({success: false, err});
-//         });
-// })
+//DELETE USER
+server.delete('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    db.remove(id)
+        .then(deletedUser => {
+            if(deletedUser) {
+                res.status(204).end();
+            } else {
+                res.status(404).json({ message: `i could not find user with id ${id}` });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ success: false, err });
+        });
+})
 
 server.listen(8000, () => {
     console.log('=== server listening on port 8000===');
