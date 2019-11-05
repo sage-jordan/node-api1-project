@@ -8,10 +8,6 @@ server.get('/', (req, res) => {
     res.send(`The server works!`);
 });
 
-server.listen(5000, () => {
-    console.log('=== server listening on port 5000===');
-});
-
 server.use(express.json());
 
 // //CREATE A USER
@@ -27,7 +23,7 @@ server.use(express.json());
 //         });
 // })
 
-//GET USERS
+//GET USERS (complete)
 server.get('/api/users', (req, res) => { 
     // const users = db.find();
     // if(users){
@@ -46,14 +42,19 @@ server.get('/api/users', (req, res) => {
 
 //GET USER BY ID
 server.get('/api/users/:id', (req, res) => {
-    const id = req.params.id;
-    db.findById(id)
-        .then(byId => {
-            res.status(202).json({success: true, message: byId})
-        })
-        .catch(err => {
-            res.status(501).json({success: false, message: `cannot find user with id= ${id}`})
-        })
+    const { id } = req.params;
+    if(id){
+        db.findById(id)
+            .then(userAtId => {
+                console.log(`User at id: ${id}: `, userAtId);
+                res.status(202).json({ success: true, message: userAtId });
+            })
+            .catch(err => {
+                res.status(501).json({ success: false, message: `cannot find user with id= ${id}`, err });
+            });
+    } else {
+        res.status(404).json({ message: `The user with id ${id} does not exist.` });
+    };
 });
 
 // //UPDATE USER
@@ -63,7 +64,7 @@ server.get('/api/users/:id', (req, res) => {
 //     db.update(id , userInfo)
 //         .then(user => {
 //             if(user) {
-//                 res.status(203).json
+//                 res.status(203).json({success: true, message: user})
 //             } else {
 //                 res.status(404).json({success: false, message: `cannot find user with id= ${id}`})
 //             }
@@ -85,3 +86,7 @@ server.get('/api/users/:id', (req, res) => {
 //             res.status(500).json({success: false, err});
 //         });
 // })
+
+server.listen(5000, () => {
+    console.log('=== server listening on port 5000===');
+});
