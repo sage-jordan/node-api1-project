@@ -23,7 +23,7 @@ server.use(express.json());
 //         });
 // })
 
-//GET USERS (complete)
+//GET USERS (complete w 'localhost:8000/api/users')
 server.get('/api/users', (req, res) => { 
     // const users = db.find();
     // if(users){
@@ -40,21 +40,21 @@ server.get('/api/users', (req, res) => {
         });
 });
 
-//GET USER BY ID
-server.get('/api/users/:id', (req, res) => {
-    const { id } = req.params;
-    if(id){
-        db.findById(id)
-            .then(userAtId => {
-                console.log(`User at id: ${id}: `, userAtId);
+//GET USER BY NAME (completed w 'localhost:8000/api/users/:name?name=Samwise Gamgee')
+server.get('/api/users/:name', (req, res) => {
+    const { name } = req.params;
+    db.findById(id)
+        .then(userAtId => {
+            console.log(`${name}: `, userAtId);
+            if(userAtId){
                 res.status(202).json({ success: true, message: userAtId });
-            })
-            .catch(err => {
-                res.status(501).json({ success: false, message: `cannot find user with id= ${id}`, err });
-            });
-    } else {
-        res.status(404).json({ message: `The user with id ${id} does not exist.` });
-    };
+            } else {
+                res.status(404).json({ message: `The user ${name} does not exist.` });
+            };
+        })
+        .catch(err => {
+            res.status(501).json({ success: false, message: `cannot find ${name}`, err });
+        });
 });
 
 // //UPDATE USER
@@ -87,6 +87,6 @@ server.get('/api/users/:id', (req, res) => {
 //         });
 // })
 
-server.listen(5000, () => {
-    console.log('=== server listening on port 5000===');
+server.listen(8000, () => {
+    console.log('=== server listening on port 8000===');
 });
