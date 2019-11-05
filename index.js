@@ -10,18 +10,18 @@ server.get('/', (req, res) => {
 
 server.use(express.json());
 
-// //CREATE A USER
-// server.post('/api/users', (req, res) => {
-//     const user = res.body;
-//     console.log(user);
-//     db.insert(user)
-//         .then(newUser => {
-//             res.status(200).json({success: true, newUser})
-//         })
-//         .catch(err => {
-//             res.status(500).json({success:false, message: err})
-//         });
-// })
+//CREATE A USER
+server.post('/api/users', (req, res) => {
+    const user = res.body;
+    console.log(user);
+    db.insert(user)
+        .then(newUser => {
+            res.status(200).json({success: true, newUser})
+        })
+        .catch(err => {
+            res.status(500).json({success:false, message: err})
+        });
+})
 
 //GET USERS (complete w 'localhost:8000/api/users')
 server.get('/api/users', (req, res) => { 
@@ -71,13 +71,13 @@ server.get('/api/users/:name', (req, res) => {
 //         })
 // })
 
-//DELETE USER
+//DELETE USER (works with path var id)
 server.delete('/api/users/:id', (req, res) => {
     const {id} = req.params;
     db.remove(id)
         .then(deletedUser => {
             if(deletedUser) {
-                res.status(204).end();
+                res.status(204).json({ deletedUser });
             } else {
                 res.status(404).json({ message: `i could not find user with id ${id}` });
             }
