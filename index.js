@@ -64,19 +64,26 @@ server.get('/api/users/:name', (req, res) => {
         });
 });
 
-// //UPDATE USER
-// server.put('/api/users/:id', (req, res) => {
-//     const id = req.params.id;
-//     const userInfo = req.body;
-//     db.update(id , userInfo)
-//         .then(user => {
-//             if(user) {
-//                 res.status(203).json({success: true, message: user})
-//             } else {
-//                 res.status(404).json({success: false, message: `cannot find user with id= ${id}`})
-//             }
-//         })
-// })
+//UPDATE USER
+server.put('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+    const userInfo = req.body;
+    db.update(id , userInfo)
+        .then(user => {
+            if(user) {
+                const newUser = {
+                    ...userInfo,
+                    id: user
+                };
+                res.status(203).json({ success: true, newUser })
+            } else {
+                res.status(404).json({ success: false, message: `cannot find user with id= ${id}` })
+            }
+        })
+        .catch(err => {
+            res.status(503).json({ success: false, err })
+        })
+})
 
 //DELETE USER (works with path var id)
 server.delete('/api/users/:id', (req, res) => {
@@ -84,6 +91,7 @@ server.delete('/api/users/:id', (req, res) => {
     db.remove(id)
         .then(deletedUser => {
             if(deletedUser) {
+                console.log(deletedUser);
                 res.status(204).json({ deletedUser });
             } else {
                 res.status(404).json({ message: `i could not find user with id ${id}` });
